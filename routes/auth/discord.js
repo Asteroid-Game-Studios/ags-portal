@@ -19,10 +19,10 @@ const {
     send2FACode
 } = require('../../lib/2fa');
 
-router.get('/discord', passport.authenticate('discord', {
-    scope: ['identify', 'guilds', 'connections']
-}));
 
+router.get('/discord', (req, res) => {
+    res.redirect('https://discord.com/oauth2/authorize?client_id=1361175865991499928&response_type=code&redirect_uri=https%3A%2F%2Fportal.asteroidgames.co.uk%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+connections');
+});
 
 router.get('/callback/discord',
     passport.authenticate('discord', { failureRedirect: '/' }),
