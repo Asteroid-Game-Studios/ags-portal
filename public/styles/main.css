@@ -1519,3 +1519,167 @@ a:focus {
     left: 0;
     color: var(--primary);
 }
+
+/* Meetings Page Styles */
+.meetings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-xl);
+}
+
+.meetings-header {
+    margin-bottom: var(--space-xl);
+    text-align: center;
+}
+
+.meetings-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+}
+
+.meetings-description {
+    color: var(--gray);
+    font-size: 1.125rem;
+}
+
+.meetings-grid {
+    display: grid;
+    gap: var(--space-xl);
+}
+
+.meeting-card {
+    background: rgba(35, 39, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+}
+
+.meetings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.meeting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-md);
+}
+
+.meeting-info h3 {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+.meeting-time {
+    color: var(--gray);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.meeting-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    padding: var(--space-xs);
+    transition: color 0.2s ease;
+}
+
+.btn-icon:hover {
+    color: var(--light);
+}
+
+.meetings-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--primary);
+    color: var(--light);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: var(--dark);
+    margin: 10% auto;
+    padding: var(--space-xl);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    color: var(--gray);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--light);
+}
+
+.no-meetings {
+    text-align: center;
+    padding: var(--space-lg);
+    color: var(--gray);
+}
+
+.role-checkboxes {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+}
+
+.invited-roles {
+    margin-top: var(--space-sm);
+}
+
+.role-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--light);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-right: var(--space-xs);
+    font-size: 0.875rem;
+}

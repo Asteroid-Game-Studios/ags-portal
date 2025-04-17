@@ -57,6 +57,7 @@ const authRoute = require('./routes/auth/discord');
 const apiRoute = require('./routes/api');
 const apiUsersRoute = require('./routes/api/users');
 const docsRoute = require('./routes/docs');
+const meetingsRoute = require('./routes/meetings');
 
 
 app.use('/', indexRoute);
@@ -68,6 +69,7 @@ app.use('/docs', docsRoute);
 app.use('/docs/overview', docsRoute);
 app.use('/docs/rblx-studio', docsRoute);
 app.use('/docs/moderation', docsRoute);
+app.use('/meetings', meetingsRoute);
 
 app.get('/2fa', (req, res) => {
     if (!req.user) {

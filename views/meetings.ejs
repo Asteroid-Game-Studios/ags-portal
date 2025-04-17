@@ -1,0 +1,110 @@
+<div class="meetings-container">
+    <div class="meetings-header animate-on-scroll">
+        <h1 class="meetings-title">Meetings Scheduler</h1>
+        <p class="meetings-description">Schedule and manage team meetings efficiently</p>
+        <button class="btn-primary" onclick="openMeetingModal()">
+            <i class="fas fa-plus"></i> Create Meeting
+        </button>
+    </div>
+
+    <!-- Meeting Creation Modal -->
+    <div id="meetingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMeetingModal()">&times;</span>
+            <h2>Create New Meeting</h2>
+            <form id="meetingForm">
+                <div class="form-group">
+                    <label for="meetingTitle">Title</label>
+                    <input type="text" id="meetingTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDate">Date & Time</label>
+                    <input type="datetime-local" id="meetingDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDuration">Duration (minutes)</label>
+                    <input type="number" id="meetingDuration" min="15" required>
+                </div>
+                <div class="form-group">
+                    <label for="meetingDescription">Description</label>
+                    <textarea id="meetingDescription" rows="3"></textarea>
+                </div>
+                <!-- Inside the meeting form -->
+                <div class="form-group">
+                    <label>Invite Roles</label>
+                    <div class="role-checkboxes">
+                        <label>
+                            <input type="checkbox" name="invitedRoles" value="<%= roles.director %>"> Directors
+                        </label>
+                        <label>
+                            <input type="checkbox" name="invitedRoles" value="<%= roles.developer %>"> Developers
+                        </label>
+                        <label>
+                            <input type="checkbox" name="invitedRoles" value="<%= roles.soundDesign %>"> Sound Designers
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Create Meeting</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="meetings-content">
+        <div class="meetings-grid">
+            <!-- Upcoming Meetings -->
+            <div class="meeting-card upcoming-meetings">
+                <h2>Upcoming Meetings</h2>
+                <div class="meetings-list" style="margin-top: 20px;">
+                    <% if (meetings && meetings.length > 0) { %>
+                        <% meetings.forEach(meeting => { %>
+                            <div class="meeting-item">
+                                <div class="meeting-info">
+                                    <h3><%= meeting.title %></h3>
+                                    <p class="meeting-time">
+                                        <%= new Date(meeting.date).toLocaleString() %> 
+                                        (<%= meeting.duration %> minutes)
+                                    </p>
+                                    <% if (meeting.invitedRoles && meeting.invitedRoles.length > 0) { %>
+                                        <div class="invited-roles">
+                                            <strong>Invited Roles:</strong>
+                                            <% if (meeting.invitedRoles && meeting.invitedRoles.length > 0) { %>
+                                                <% const roleMap = {
+                                                    [roles.director]: 'Directors',
+                                                    [roles.developer]: 'Developers',
+                                                    [roles.soundDesign]: 'Sound Designers'
+                                                }; %>
+                                                <% meeting.invitedRoles.forEach(role => { %>
+                                                    <% if (roleMap[role]) { %>
+                                                        <span class="role-tag"><%= roleMap[role] %></span>
+                                                    <% } else { %>
+                                                        <!-- Debugging: Show the actual role ID if it doesn't match -->
+                                                        <span class="role-tag">Unknown Role: <%= role %></span>
+                                                    <% } %>
+                                                <% }) %>
+                                            <% } %>
+                                        </div>
+                                    <% } %>
+                                    <% if (meeting.description) { %>
+                                        <p class="meeting-description"><%= meeting.description %></p>
+                                    <% } %>
+                                </div>
+                                <div class="meeting-actions">
+                                    <button class="btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon delete-meeting" title="Delete" data-id="<%= meeting._id %>">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="no-meetings">
+                            <p>No upcoming meetings scheduled</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
