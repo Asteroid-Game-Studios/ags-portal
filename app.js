@@ -58,6 +58,7 @@ const apiRoute = require('./routes/api');
 const apiUsersRoute = require('./routes/api/users');
 const docsRoute = require('./routes/docs');
 const meetingsRoute = require('./routes/meetings');
+const tasksRoute = require('./routes/tasks');
 
 
 app.use('/', indexRoute);
@@ -70,6 +71,7 @@ app.use('/docs/overview', docsRoute);
 app.use('/docs/rblx-studio', docsRoute);
 app.use('/docs/moderation', docsRoute);
 app.use('/meetings', meetingsRoute);
+app.use('/tasks', tasksRoute)
 
 app.get('/2fa', (req, res) => {
     if (!req.user) {
