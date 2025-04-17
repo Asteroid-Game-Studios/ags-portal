@@ -166,9 +166,15 @@ a:focus {
 }
 
 .logo {
+    width: 40px;
     height: 40px;
-    width: auto;
-    transition: transform var(--transition-fast) ease;
+    object-fit: contain;
+}
+
+.logo-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
 }
 
 .logo:hover {
@@ -178,11 +184,8 @@ a:focus {
 .site-title {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
+    color: var(--light);
+    margin: 0;
 }
 
 .user-nav {
@@ -1247,4 +1250,272 @@ a:focus {
     .card-content {
         color: #333;
     }
+}
+
+/* Documentation Styles */
+.docs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-xl);
+}
+
+.docs-header {
+    margin-bottom: var(--space-xl);
+}
+
+.docs-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.docs-content {
+    margin-top: var(--space-xl);
+}
+
+.docs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+}
+
+.docs-item {
+    background: rgba(35, 39, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.docs-item-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.docs-item-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: var(--space-md);
+}
+
+.docs-item-icon i {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.docs-item-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--light);
+    margin-bottom: var(--space-sm);
+}
+
+.docs-item-description {
+    color: var(--gray);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.docs-item-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-top: auto;
+    width: fit-content;
+}
+
+.docs-item-link:hover {
+    color: var(--secondary);
+}
+
+.docs-item-link i {
+    transition: transform 0.2s ease;
+}
+
+.docs-item-link:hover i {
+    transform: translateX(4px);
+}
+
+.docs-item:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .docs-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .docs-item {
+        padding: var(--space-lg);
+    }
+}
+
+/* DropDown Stles for NavBar */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 1rem;
+    color: var(--gray);
+    transition: color var(--transition-normal) ease;
+}
+
+.dropdown-toggle:hover {
+    color: var(--light);
+}
+
+.dropdown-toggle .fa-chevron-down {
+    font-size: 0.8rem;
+    margin-left: var(--space-sm);
+    transition: transform 0.2s ease;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(35, 39, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    min-width: 200px;
+    padding: var(--space-sm);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown:hover .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--gray);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--light);
+}
+
+.dropdown-item i {
+    width: 16px;
+    text-align: center;
+}
+
+/* Add this new style */
+.nav-links .dropdown {
+    display: flex;
+    align-items: center;
+}
+
+.command-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+
+.command-item {
+    background: rgba(35, 39, 42, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.command-item code {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    color: var(--primary);
+    margin-bottom: var(--space-md);
+}
+
+.command-item p {
+    color: var(--gray);
+    margin: 0;
+}
+
+.notice-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.notice-box i {
+    color: #ffc107;
+    font-size: 1.5rem;
+}
+
+.notice-box p {
+    margin: 0;
+    color: var(--light);
+}
+
+.best-practices-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-lg) 0;
+}
+
+.best-practices-list li {
+    position: relative;
+    padding-left: var(--space-xl);
+    margin-bottom: var(--space-md);
+    color: var(--gray);
+}
+
+.best-practices-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
 }

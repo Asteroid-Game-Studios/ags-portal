@@ -1,0 +1,84 @@
+<div class="docs-page-container">
+    <div class="docs-content-header animate-on-scroll">
+        <h1 class="docs-page-title">Moderation System Guide</h1>
+        <p class="docs-page-description">A comprehensive guide on using the AGS moderation system and commands</p>
+    </div>
+
+    <div class="docs-content-body">
+        <section class="docs-section animate-on-scroll">
+            <h2 class="section-title">Standard Moderation Commands</h2>
+            <div class="section-content">
+                <h3>Basic Commands</h3>
+                <p>These commands are available to all moderators:</p>
+                <div class="command-list">
+                    <div class="command-item">
+                        <code>/kick [user] [reason]</code>
+                        <p>Removes a user from the server temporarily. They can rejoin with a new invite.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/mute [user] [duration] [reason]</code>
+                        <p>Temporarily prevents a user from sending messages (timeout).</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/unmute [user] [reason]</code>
+                        <p>Removes a timeout from a user before its scheduled end.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/purge [NUMBER]</code>
+                        <p>Deletes a specified number of messages from the current channel.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/warn [user] [reason]</code>
+                        <p>Issues a formal warning to a user.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/checkwarn [user]</code>
+                        <p>Views all active warnings for a specified user.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="docs-section animate-on-scroll">
+            <h2 class="section-title">Senior Moderator Commands</h2>
+            <div class="section-content">
+                <div class="notice-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>The following commands require Senior Moderator permissions. Regular moderators must request a Senior Moderator to perform these actions.</p>
+                </div>
+
+                <div class="command-list">
+                    <div class="command-item">
+                        <code>/unwarn [warn_id] [reason]</code>
+                        <p>Revokes a specific warning from a user's record.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/unban [user] [reason]</code>
+                        <p>Removes a ban, allowing the user to rejoin the server.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/ban [user] [reason] [duration] [days of messages to delete]</code>
+                        <p>Bans a user from the server and optionally deletes their recent messages.</p>
+                    </div>
+                    <div class="command-item">
+                        <code>/checkwarn-revoked [user]</code>
+                        <p>Views all revoked warnings for a specified user.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="docs-section animate-on-scroll">
+            <h2 class="section-title">Best Practices</h2>
+            <div class="section-content">
+                <ul class="best-practices-list">
+                    <li>Always provide clear and specific reasons when using moderation commands</li>
+                    <li>Use appropriate durations for temporary actions (mutes, bans)</li>
+                    <li>Document significant moderation actions in the designated staff channels</li>
+                    <li>Consult with senior staff when unsure about appropriate actions</li>
+                    <li>Regular moderators should contact Senior Moderators through appropriate channels for elevated commands</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

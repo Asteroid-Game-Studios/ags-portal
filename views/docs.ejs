@@ -1,0 +1,54 @@
+<div class="docs-container">
+    <% if (typeof user !== 'undefined' && user) { %>
+    <div class="docs-header animate-on-scroll">
+        <h1 class="docs-title">Documentation</h1>
+    </div>
+
+    <div class="docs-content">
+        <div class="docs-list">
+            <div class="docs-item animate-on-scroll">
+                <div class="docs-item-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="docs-item-content">
+                    <h3 class="docs-item-title">Overview</h3>
+                    <p class="docs-item-description">Introduction to the Asteroid Studios staff portal.</p>
+                    <a href="/docs/overview" class="docs-item-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="docs-item animate-on-scroll">
+                <div class="docs-item-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="docs-item-content">
+                    <h3 class="docs-item-title">Roblox Studio</h3>
+                    <p class="docs-item-description">How to work on an AGS project with Roblox Studio.</p>
+                    <a href="/docs/rblx-studio" class="docs-item-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="docs-item animate-on-scroll">
+                <div class="docs-item-icon">
+                    <i class="fas fa-shield"></i>
+                </div>
+                <div class="docs-item-content">
+                    <h3 class="docs-item-title">Moderation Guide</h3>
+                    <p class="docs-item-description">How to moderate our community as a Moderator.</p>
+                    <a href="/docs/moderation" class="docs-item-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="error-container">
+        <h1>Access Denied</h1>
+        <p>Please log in to access the documentation.</p>
+        <a href="/login" class="login-button">Login</a>
+    </div>
+    <% } %>
+</div>

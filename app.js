@@ -56,6 +56,7 @@ const dashboardRoute = require('./routes/dashboard');
 const authRoute = require('./routes/auth/discord');
 const apiRoute = require('./routes/api');
 const apiUsersRoute = require('./routes/api/users');
+const docsRoute = require('./routes/docs');
 
 
 app.use('/', indexRoute);
@@ -63,8 +64,10 @@ app.use('/dashboard', dashboardRoute);
 app.use('/auth', authRoute);
 app.use('/api', apiRoute);
 app.use('/api/users', apiUsersRoute);
-
-
+app.use('/docs', docsRoute);
+app.use('/docs/overview', docsRoute);
+app.use('/docs/rblx-studio', docsRoute);
+app.use('/docs/moderation', docsRoute);
 
 app.get('/2fa', (req, res) => {
     if (!req.user) {
