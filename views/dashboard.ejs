@@ -23,19 +23,22 @@
                         </p>
                         <% } %>
                             <div class="profile-connections">
-                                <% if (user.connections && user.connections.length> 0) { %>
-                                    <% user.connections.forEach(function(connection) { %>
-                                        <a href="<%= connection.url %>"
-                                            class="connection-item connection-<%= connection.type %>" target="_blank"
+                                <% let github=null; if (user.connections && user.connections.length> 0) {
+                                    github = user.connections.find(function(connection) {
+                                    return connection.type === 'github';
+                                    });
+                                    }
+                                    %>
+                                    <% if (github) { %>
+                                        <a href="https://github.com/<%= github.name %>"
+                                            class="connection-item connection-github" target="_blank"
                                             rel="noopener noreferrer">
-                                            <i class="fab fa-<%= connection.type %>"></i>
-                                            <%= connection.name %>
+                                            <i class="fab fa-github"></i>
+                                            <%= github.name %>
                                         </a>
-                                        <% }); %>
-                                            <% } else { %>
-                                                <p class="no-connections"><i class="fas fa-link-slash"></i> No connected
-                                                    accounts</p>
-                                                <% } %>
+                                        <% } else { %>
+                                            <p class="no-connections"><i class="fab fa-github"></i> Not linked</p>
+                                            <% } %>
                             </div>
                 </div>
             </div>
