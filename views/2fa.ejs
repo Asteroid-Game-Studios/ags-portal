@@ -1,0 +1,14 @@
+<div class="auth-container">
+    <div class="auth-card animate-on-scroll">
+        <h1 class="auth-title">Two-Factor Authentication</h1>
+        <p class="auth-description">Please check your Discord DMs for a verification code.</p>
+        
+        <form action="/api/auth/verify-2fa" method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="code">Verification Code</label>
+                <input type="text" id="code" name="code" placeholder="Enter 6-digit code" maxlength="6" required>
+            </div>
+            <button type="submit" class="btn-primary">Verify Code</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="dashboard-container">
+    <div class="dashboard-header animate-on-scroll">
+        <h1 class="dashboard-title">Staff Dashboard</h1>
+        <p class="dashboard-welcome">Welcome back, <span class="username">
+                <%= user.username %>
+            </span>!</p>
+    </div>
+
+    <div class="dashboard-content">
+        <div class="profile-card animate-on-scroll">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img src="<%= user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png' %>"
+                        alt="<%= user.username %>'s avatar" class="user-avatar">
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name">
+                        <%= user.username %><span class="discriminator">#<%= user.discriminator %></span>
+                    </h2>
+                    <% if (user.bio) { %>
+                        <p class="profile-bio">
+                            <%= user.bio %>
+                        </p>
+                        <% } %>
+                            <div class="profile-connections">
+                                <% if (user.connections && user.connections.length> 0) { %>
+                                    <% user.connections.forEach(function(connection) { %>
+                                        <a href="<%= connection.url %>"
+                                            class="connection-item connection-<%= connection.type %>" target="_blank"
+                                            rel="noopener noreferrer">
+                                            <i class="fab fa-<%= connection.type %>"></i>
+                                            <%= connection.name %>
+                                        </a>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <p class="no-connections"><i class="fas fa-link-slash"></i> No connected
+                                                    accounts</p>
+                                                <% } %>
+                            </div>
+                </div>
+            </div>
+
+            <div class="roles-container">
+                <h3 class="roles-title"><i class="fas fa-tags"></i> Your Roles</h3>
+                <div class="roles-list">
+                    <% if (user.roles && user.roles.length> 0) { %>
+                        <% user.roles.forEach(function(role) { %>
+                            <div class="role-badge <%= role.toLowerCase() %>-role">
+                                <i class="fas fa-circle"></i>
+                                <%= role %>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <p class="no-roles"><i class="fas fa-exclamation-circle"></i> No roles assigned</p>
+                                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card animate-on-scroll">
+            <h2 class="card-title"><i class="fas fa-info-circle"></i> Welcome to the Staff Portal</h2>
+            <div class="card-content">
+                <p>
+                    This is your staff profile. Here you can view your roles and connected accounts.<br>
+                    More features will be added soon!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
