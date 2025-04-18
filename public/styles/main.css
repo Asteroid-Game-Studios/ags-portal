@@ -1623,6 +1623,21 @@ a:focus {
     background: var(--primary-dark);
 }
 
+.meetings-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.meetings-card-header h2 {
+    margin: 0;
+}
+
+.meetings-card-header .btn-primary {
+    margin: 0;
+}
+
 /* Modal Styles */
 .modal {
     display: none;
@@ -1633,18 +1648,22 @@ a:focus {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* Add scrolling for modal content */
 }
 
 .modal-content {
     background: var(--dark);
-    margin: 10% auto;
+    margin: 5% auto; /* Reduce top margin */
     padding: var(--space-xl);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     width: 90%;
     max-width: 500px;
     position: relative;
+    max-height: 90vh; /* Limit height */
+    overflow-y: auto; /* Add scrolling for content */
 }
+
 
 .close {
     color: var(--gray);
@@ -1667,7 +1686,84 @@ a:focus {
 .role-checkboxes {
     display: flex;
     gap: var(--space-md);
+    flex-wrap: wrap;
     margin-top: var(--space-sm);
+}
+
+.role-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+}
+
+.role-checkboxes label:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.role-checkboxes input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    position: relative;
+    cursor: pointer;
+    transition: all var(--transition-fast) ease;
+}
+
+.role-checkboxes input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.role-checkboxes input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 10px;
+    border: solid var(--dark);
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.role-checkboxes span {
+    color: var(--light);
+    font-size: 0.9rem;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--light);
+    font-size: 1rem;
+    min-height: 150px;
+    resize: vertical;
+    transition: all var(--transition-fast) ease;
+}
+
+.form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(114, 137, 218, 0.2);
+    outline: none;
+}
+
+.form-group textarea:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-group textarea::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
 }
 
 .invited-roles {
@@ -1682,6 +1778,13 @@ a:focus {
     border-radius: var(--radius-sm);
     margin-right: var(--space-xs);
     font-size: 0.875rem;
+}
+
+@media (max-height: 600px) {
+    .modal-content {
+        margin: 2% auto;
+        max-height: 96vh;
+    }
 }
 
 /* Task Sheet Styling */
@@ -1753,4 +1856,109 @@ a:focus {
 .task-due-date {
     color: var(--gray);
     font-size: 0.8em;
+}
+
+/* Admin Panel */
+.admin-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: var(--dark);
+    border-radius: var(--radius-md);
+}
+
+.users-list {
+    margin-top: 2rem;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.users-table th,
+.users-table td {
+    padding: 1rem;
+    text-align: left;
+}
+
+.users-table th {
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.users-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.users-table tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.no-users {
+    text-align: center;
+    padding: 2rem;
+    color: var(--gray);
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .users-table thead {
+        display: none;
+    }
+
+    .users-table tr {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .users-table td {
+        display: block;
+        text-align: right;
+        padding: 0.5rem 1rem;
+    }
+
+    .users-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: var(--gray);
+    }
+}
+
+.task-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.task-modal-content {
+    background: var(--dark);
+    margin: 10% auto;
+    padding: var(--space-xl);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
 }

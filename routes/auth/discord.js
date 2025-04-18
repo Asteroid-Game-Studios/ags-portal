@@ -21,7 +21,7 @@ const {
 
 
 router.get('/discord', (req, res) => {
-    res.redirect('https://discord.com/oauth2/authorize?client_id=1361175865991499928&response_type=code&redirect_uri=https%3A%2F%2Fportal.asteroidgames.co.uk%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+connections');
+    res.redirect('https://discord.com/oauth2/authorize?client_id=1361175865991499928&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+connections');
 });
 
 router.get('/callback/discord',
@@ -149,6 +149,9 @@ router.post('/verify-2fa', express.urlencoded({ extended: true }), async (req, r
                 }
                 if (guildMember.roles.includes(process.env.SOUND_DESIGN_ROLE_ID)) {
                     roles.push('Sound Design');
+                }
+                if (guildMember.roles.includes(process.env.AGS_STAFF_ROLE_ID)) {
+                    roles.push('AGS Staff');
                 }
 
                 req.user.bio = guildMember.user.bio || null;

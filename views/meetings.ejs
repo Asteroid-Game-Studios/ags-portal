@@ -1,13 +1,5 @@
 <div class="meetings-container">
-    <div class="meetings-header animate-on-scroll">
-        <h1 class="meetings-title">Meetings Scheduler</h1>
-        <p class="meetings-description">Schedule and manage team meetings efficiently</p>
-        <button class="btn-primary" onclick="openMeetingModal()">
-            <i class="fas fa-plus"></i> Create Meeting
-        </button>
-    </div>
-
-    <!-- Meeting Creation Modal -->
+    <!-- Remove the meetings-header div -->
     <div id="meetingModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeMeetingModal()">&times;</span>
@@ -51,9 +43,13 @@
 
     <div class="meetings-content">
         <div class="meetings-grid">
-            <!-- Upcoming Meetings -->
             <div class="meeting-card upcoming-meetings">
-                <h2>Upcoming Meetings</h2>
+                <div class="meetings-card-header">
+                    <h2>Upcoming Meetings</h2>
+                    <button class="btn-primary" onclick="openMeetingModal()">
+                        <i class="fas fa-plus"></i> Create Meeting
+                    </button>
+                </div>
                 <div class="meetings-list" style="margin-top: 20px;">
                     <% if (meetings && meetings.length > 0) { %>
                         <% meetings.forEach(meeting => { %>

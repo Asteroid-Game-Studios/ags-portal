@@ -37,9 +37,30 @@ passport.use(new DiscordStrategy({
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
     callbackURL: process.env.DISCORD_REDIRECT_URI,
     scope: ['identify', 'guilds', 'connections']
-}, (accessToken, refreshToken, profile, done) => {
-    profile.accessToken = accessToken;
-    return done(null, profile);
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        const Users = require('./models/Users');
+        const { fetchGuildMember, getRoleName } = require('./lib/discord');
+        
+        const guildMember = await fetchGuildMember(profile.id, accessToken);
+        const roles = guildMember.roles.map(roleId => getRoleName(roleId));
+
+        let user = await Users.findOneAndUpdate(
+            { username: profile.username },
+            { 
+                $set: { 
+                    last_login: new Date(),
+                    roles: roles 
+                } 
+            },
+            { new: true, upsert: true }
+        );
+
+        profile.userId = user._id;
+        return done(null, profile);
+    } catch (error) {
+        return done(error);
+    }
 }));
 
 passport.serializeUser((user, done) => {
@@ -58,7 +79,8 @@ const apiRoute = require('./routes/api');
 const apiUsersRoute = require('./routes/api/users');
 const docsRoute = require('./routes/docs');
 const meetingsRoute = require('./routes/meetings');
-const tasksRoute = require('./routes/tasks');
+const tasksRouter = require('./routes/tasks');
+const adminRoute = require('./routes/admin');
 
 
 app.use('/', indexRoute);
@@ -71,7 +93,13 @@ app.use('/docs/overview', docsRoute);
 app.use('/docs/rblx-studio', docsRoute);
 app.use('/docs/moderation', docsRoute);
 app.use('/meetings', meetingsRoute);
-app.use('/tasks', tasksRoute)
+app.use('/tasks', tasksRouter);
+app.use('/admin', adminRoute);
+
+// Remove these duplicate routes (they appear again later in the file)
+// app.use('/', indexRoute);
+// app.use('/dashboard', dashboardRoute);
+// app.use('/api/auth', authRoute);
 
 app.get('/2fa', (req, res) => {
     if (!req.user) {
