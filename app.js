@@ -110,6 +110,17 @@ app.use('/dashboard', dashboardRoute);
 app.use('/api/auth', authRoute);
 
 
+// Add this near your other route definitions
+app.use('/tasks', require('./routes/tasks'));
+app.use('/meetings', require('./routes/meetings'));
+
+// Make sure you have a catch-all route at the end
+app.use((req, res) => {
+    console.log(`404 - Not Found: ${req.originalUrl}`);
+    res.status(404).send('Not Found');
+});
+
+
 
 app.listen(process.env.PORT || 3001, () => {
     const port = process.env.PORT || 3001;
