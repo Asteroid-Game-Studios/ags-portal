@@ -2,16 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    if (req.query.error === 'unauthorized') {
-        return res.render('no-access', {
-            title: 'Access Restricted | Asteroid Studios',
-            user: req.user
-        });
-    }
     res.render('index', {
-        title: 'Asteroid Studios Staff Portal',
-        user: req.user,
-        error: req.query.error
+        title: 'Staff Portal | Asteroid Studios',
+        user: req.user || null,
+        error: req.query.error || null
     });
 });
 
