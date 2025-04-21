@@ -6,6 +6,7 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectMongo = require('./lib/mongo');
+const { retrieveAccessToken, fetchUserProfile } = require('./lib/auth');
 require('dotenv').config();
 
 const app = express();
@@ -26,7 +27,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production' || 'production',
+        secure: true,
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     },

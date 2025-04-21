@@ -25,7 +25,7 @@ const {
 
 
 router.get('/discord', (req, res) => {
-    res.redirect('https://discord.com/oauth2/authorize?client_id=1361175865991499928&response_type=code&redirect_uri=https%3A%2F%2Fportal.asteroidgames.co.uk%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+connections');
+    res.redirect(`https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}&scope=identify+guilds+connections`);
 });
 
 router.get('/callback/discord',
