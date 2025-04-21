@@ -37,7 +37,8 @@ router.get('/discord', (req, res) => {
         return res.status(500).send('Server configuration error');
     }
     
-    const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds%20connections`;
+
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds%20connections`;
     
     console.log('Redirecting to Discord OAuth URL:', authUrl);
     res.redirect(authUrl);
