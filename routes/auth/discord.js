@@ -27,17 +27,19 @@ const {
 router.get('/discord', (req, res) => {
     const clientId = process.env.DISCORD_CLIENT_ID;
     const redirectUri = process.env.DISCORD_REDIRECT_URI;
-
+    
     console.log('Discord OAuth URL parameters:');
     console.log('Client ID:', clientId);
     console.log('Redirect URI:', redirectUri);
-
+    
     if (!clientId || !redirectUri) {
         console.error('Missing required environment variables for Discord OAuth');
         return res.status(500).send('Server configuration error');
     }
-
-    const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=identify+guilds+connections`;
+    
+    const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds%20connections`;
+    
+    console.log('Redirecting to Discord OAuth URL:', authUrl);
     res.redirect(authUrl);
 });
 
