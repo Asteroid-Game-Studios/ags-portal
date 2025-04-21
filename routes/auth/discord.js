@@ -97,10 +97,23 @@ router.get('/callback/discord',
                     return res.redirect('/?error=server');
                 }
 
-                req.user = userData;
-                req.session.passport = { user: userId };
 
-                await storeAccessToken(userId, userData.accessToken, userData.refreshToken);
+                req.user = userData;
+
+
+                req.session.passport = {
+                    user: {
+                        id: userId,
+                        accessToken: userData.accessToken
+                    }
+                };
+
+                req.session.save();
+
+                const sessionId = req.sessionID;
+                const tokenResult = await storeAccessToken(userId, userData.accessToken, userData.refreshToken, 86400, sessionId);
+
+                req.user.sessionId = sessionId;
 
                 const guildMember = await fetchGuildMember(userId, userData.accessToken);
                 const connections = await fetchUserConnections(userData.accessToken);
@@ -253,10 +266,21 @@ router.get('/retry-2fa', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
+    // Get the current user and session ID before logout
+    const userId = req.user?.id;
+    const sessionId = req.user?.sessionId || req.sessionID;
+
     req.logout((err) => {
         if (err) {
             console.error('Error during logout:', err);
             return res.redirect('/?error=logout');
+        }
+
+        // Clear this specific user session from the database
+        if (userId && sessionId) {
+            clearUserSession(userId, sessionId)
+                .then(() => console.log(`Cleared session ${sessionId} for user ${userId}`))
+                .catch(err => console.error('Error clearing user session:', err));
         }
 
         req.session.destroy((err) => {

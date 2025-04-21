@@ -32,6 +32,9 @@ connectToDatabase().then(() => {
         secret: process.env.NEXTAUTH_SECRET,
         resave: false,
         saveUninitialized: false,
+        genid: function (req) {
+            return require('crypto').randomUUID();
+        },
         cookie: {
             secure: process.env.NODE_ENV === 'production',
             httpOnly: true,
@@ -39,7 +42,9 @@ connectToDatabase().then(() => {
         },
         store: MongoStore.create({
             mongoUrl: process.env.MONGODB_URI,
-            ttl: 24 * 60 * 60
+            ttl: 24 * 60 * 60,
+            autoRemove: 'native',
+            stringify: false
         })
     }));
 
@@ -68,20 +73,34 @@ connectToDatabase().then(() => {
     }));
 
     passport.serializeUser((user, done) => {
-        done(null, user.id);
+        const sessionUser = {
+            id: user.id,
+            accessToken: user.accessToken,
+            sessionId: user.sessionId || null
+        };
+        console.log(`Serializing user ${user.id} with session ${user.sessionId || 'unknown'}`);
+        done(null, sessionUser);
     });
 
-    passport.deserializeUser(async (id, done) => {
+    passport.deserializeUser(async (sessionUser, done) => {
         try {
-            const accessToken = await retrieveAccessToken(id);
-            if (!accessToken) {
+            const { id, accessToken, sessionId } = sessionUser;
+
+            console.log(`Deserializing user ${id} with session ${sessionId || 'unknown'}`);
+
+            const storedToken = await retrieveAccessToken(id, sessionId);
+            if (!storedToken) {
+                console.log(`No valid token found for user ${id}`);
                 return done(null, false);
             }
 
-            const profile = await fetchUserProfile(id, accessToken);
+            const profile = await fetchUserProfile(id, storedToken);
             if (!profile) {
+                console.log(`Could not fetch profile for user ${id}`);
                 return done(null, false);
             }
+
+            profile.sessionId = sessionId;
 
             done(null, profile);
         } catch (error) {
@@ -101,7 +120,6 @@ connectToDatabase().then(() => {
     const tasksRoute = require('./routes/tasks');
 
 
-    // Update these lines in your app.js file
     app.use('/', indexRoute);
     app.use('/dashboard', dashboardRoute);
     app.use('/auth', authRoute);
