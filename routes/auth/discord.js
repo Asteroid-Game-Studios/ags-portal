@@ -72,7 +72,14 @@ router.get('/discord', (req, res) => {
 router.get('/callback/discord',
     (req, res, next) => {
         console.log('Received callback request from Discord');
-        next();
+        if (req.user) {
+            req.logout((err) => {
+                if (err) console.error('Error during logout:', err);
+                next();
+            });
+        } else {
+            next();
+        }
     },
     passport.authenticate('discord', {
         failureRedirect: '/',
@@ -81,97 +88,110 @@ router.get('/callback/discord',
     async (req, res) => {
         console.log('Auth callback received. User authenticated:', req.user ? req.user.id : 'none');
         try {
-            await storeAccessToken(req.user.id, req.user.accessToken, req.user.refreshToken);
+            const userId = req.user.id;
+            const userData = { ...req.user };
 
-            const guildMember = await fetchGuildMember(req.user.id, req.user.accessToken);
-            const connections = await fetchUserConnections(req.user.accessToken);
-            const guildInfo = await fetchGuildInfo();
+            req.session.regenerate(async (err) => {
+                if (err) {
+                    console.error('Error regenerating session:', err);
+                    return res.redirect('/?error=server');
+                }
 
-            if (guildMember && hasStaffRole(guildMember)) {
-                const hasCompletedAuth = await is2FAVerified(req.user.id);
+                req.user = userData;
+                req.session.passport = { user: userId };
 
-                if (!hasCompletedAuth) {
+                await storeAccessToken(userId, userData.accessToken, userData.refreshToken);
 
-                    const userAvatar = req.user.avatar
-                        ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png?size=256`
-                        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+                const guildMember = await fetchGuildMember(userId, userData.accessToken);
+                const connections = await fetchUserConnections(userData.accessToken);
+                const guildInfo = await fetchGuildInfo();
+
+                if (guildMember && hasStaffRole(guildMember)) {
+                    const hasCompletedAuth = await is2FAVerified(req.user.id);
+
+                    if (!hasCompletedAuth) {
+
+                        const userAvatar = req.user.avatar
+                            ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png?size=256`
+                            : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
 
-                    const guildIcon = guildInfo && guildInfo.icon
-                        ? `https://cdn.discordapp.com/icons/${process.env.GUILD_ID}/${guildInfo.icon}.png?size=128`
-                        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+                        const guildIcon = guildInfo && guildInfo.icon
+                            ? `https://cdn.discordapp.com/icons/${process.env.GUILD_ID}/${guildInfo.icon}.png?size=128`
+                            : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
 
-                    await logToChannel({
-                        embeds: [{
-                            color: 0x5865F2,
-                            title: 'Staff Portal Security Alert',
-                            description: `A staff member requires 2FA verification for their first login.`,
-                            thumbnail: {
-                                url: userAvatar
-                            },
-                            fields: [
-                                {
-                                    name: 'User',
-                                    value: `<@${req.user.id}>`,
-                                    inline: true
+                        await logToChannel({
+                            embeds: [{
+                                color: 0x5865F2,
+                                title: 'Staff Portal Security Alert',
+                                description: `A staff member requires 2FA verification for their first login.`,
+                                thumbnail: {
+                                    url: userAvatar
                                 },
-                                {
-                                    name: 'Timestamp',
-                                    value: `<t:${Math.floor(Date.now() / 1000)}:F>`,
-                                    inline: true
+                                fields: [
+                                    {
+                                        name: 'User',
+                                        value: `<@${req.user.id}>`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: 'Timestamp',
+                                        value: `<t:${Math.floor(Date.now() / 1000)}:F>`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: 'Security Protocol',
+                                        value: `-> 2FA code sent via Discord DM\n-> User redirected to verification page\n-> Access pending verification`,
+                                        inline: false
+                                    }
+                                ],
+                                footer: {
+                                    text: 'Asteroid Studios Security System',
+                                    icon_url: guildIcon
                                 },
-                                {
-                                    name: 'Security Protocol',
-                                    value: `-> 2FA code sent via Discord DM\n-> User redirected to verification page\n-> Access pending verification`,
-                                    inline: false
-                                }
-                            ],
-                            footer: {
-                                text: 'Asteroid Studios Security System',
-                                icon_url: guildIcon
-                            },
-                            timestamp: new Date().toISOString()
-                        }]
-                    });
+                                timestamp: new Date().toISOString()
+                            }]
+                        });
 
 
-                    const result = await send2FACode(req.user.id, req.user.username);
-                    if (!result.success) {
-                        if (result.error === 'DMS_CLOSED') {
-                            return res.redirect('/dms-closed');
+                        const result = await send2FACode(req.user.id, req.user.username);
+                        if (!result.success) {
+                            if (result.error === 'DMS_CLOSED') {
+                                return res.redirect('/dms-closed');
+                            }
+                            return res.redirect('/2fa-error');
                         }
-                        return res.redirect('/2fa-error');
+                        return res.redirect('/2fa');
                     }
-                    return res.redirect('/2fa');
-                }
 
 
-                const roles = [];
-                if (guildMember.roles.includes(process.env.DIRECTOR_ROLE_ID)) {
-                    roles.push('Director');
-                }
-                if (guildMember.roles.includes(process.env.DEVELOPER_ROLE_ID)) {
-                    roles.push('Developer');
-                }
-                if (guildMember.roles.includes(process.env.SOUND_DESIGN_ROLE_ID)) {
-                    roles.push('Sound Design');
-                }
+                    const roles = [];
+                    if (guildMember.roles.includes(process.env.DIRECTOR_ROLE_ID)) {
+                        roles.push('Director');
+                    }
+                    if (guildMember.roles.includes(process.env.DEVELOPER_ROLE_ID)) {
+                        roles.push('Developer');
+                    }
+                    if (guildMember.roles.includes(process.env.SOUND_DESIGN_ROLE_ID)) {
+                        roles.push('Sound Design');
+                    }
 
-                req.user.bio = guildMember.user.bio || null;
-                req.user.guildMember = guildMember;
-                req.user.staffMember = true;
-                req.user.connections = connections;
-                req.user.roles = roles;
+                    req.user.bio = guildMember.user.bio || null;
+                    req.user.guildMember = guildMember;
+                    req.user.staffMember = true;
+                    req.user.connections = connections;
+                    req.user.roles = roles;
 
-                await sendLoginNotification(req.user);
-                res.redirect('/dashboard');
-            } else {
-                req.logout((err) => {
-                    if (err) console.error(err);
-                    res.redirect('/?error=unauthorized');
-                });
-            }
+                    await sendLoginNotification(req.user);
+                    res.redirect('/dashboard');
+                } else {
+                    req.logout((err) => {
+                        if (err) console.error(err);
+                        res.redirect('/?error=unauthorized');
+                    });
+                }
+            });
         } catch (error) {
             console.error('Auth callback error:', error);
             res.redirect('/?error=server');
@@ -233,18 +253,25 @@ router.get('/retry-2fa', (req, res) => {
 });
 
 router.get('/logout', async (req, res) => {
-    if (req.user && req.user.id) {
-        await clearUserSession(req.user.id);
-    }
+    try {
 
-    req.logout((err) => {
-        if (err) console.error(err);
-        req.session.destroy((err) => {
-            if (err) console.error('Error destroying session:', err);
-            res.clearCookie('ags_portal_session');
-            res.redirect('/');
+        if (req.user && req.user.id) {
+            await clearUserSession(req.user.id);
+        }
+
+        req.logout((err) => {
+            if (err) console.error('Error during logout:', err);
+
+            req.session.destroy((err) => {
+                if (err) console.error('Error destroying session:', err);
+                res.clearCookie('ags_portal_session');
+                res.redirect('/');
+            });
         });
-    });
+    } catch (error) {
+        console.error('Logout error:', error);
+        res.redirect('/');
+    }
 });
 
 module.exports = router;

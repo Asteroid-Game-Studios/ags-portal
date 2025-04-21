@@ -27,16 +27,29 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, // Changed from true to false for local development
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
     },
-    name: 'ags_portal_session'
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        ttl: 24 * 60 * 60
+    })
 }));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/api/auth/discord', (req, res, next) => {
+    req.logout((err) => {
+        if (err) console.error('Error during logout:', err);
+        req.session.destroy((err) => {
+            if (err) console.error('Error destroying session:', err);
+            next();
+        });
+    });
+});
 
 passport.use(new DiscordStrategy({
     clientID: process.env.DISCORD_CLIENT_ID,
