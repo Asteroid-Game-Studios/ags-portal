@@ -27,7 +27,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
+        secure: false, // Changed from true to false for local development
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     },
@@ -85,6 +85,7 @@ const tasksRoute = require('./routes/tasks');
 app.use('/', indexRoute);
 app.use('/dashboard', dashboardRoute);
 app.use('/auth', authRoute);
+app.use('/api/auth', authRoute);
 app.use('/api', apiRoute);
 app.use('/api/users', apiUsersRoute);
 app.use('/docs', docsRoute);
@@ -126,13 +127,6 @@ app.get('/dms-closed', (req, res) => {
 });
 
 
-app.use('/', indexRoute);
-app.use('/dashboard', dashboardRoute);
-app.use('/api/auth', authRoute);
-
-
-app.use('/tasks', require('./routes/tasks'));
-app.use('/meetings', require('./routes/meetings'));
 
 app.use((req, res) => {
     console.log(`404 - Not Found: ${req.originalUrl}`);

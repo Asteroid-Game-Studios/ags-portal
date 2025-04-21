@@ -25,15 +25,37 @@ const {
 
 
 router.get('/discord', (req, res) => {
-    res.redirect(`https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}&scope=identify+guilds+connections`);
+    const clientId = process.env.DISCORD_CLIENT_ID;
+    const redirectUri = process.env.DISCORD_REDIRECT_URI;
+
+    console.log('Discord OAuth URL parameters:');
+    console.log('Client ID:', clientId);
+    console.log('Redirect URI:', redirectUri);
+
+    if (!clientId || !redirectUri) {
+        console.error('Missing required environment variables for Discord OAuth');
+        return res.status(500).send('Server configuration error');
+    }
+
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=identify+guilds+connections`;
+    res.redirect(authUrl);
 });
 
+
 router.get('/callback/discord',
-    passport.authenticate('discord', { failureRedirect: '/' }),
+    (req, res, next) => {
+        console.log('Received callback request from Discord');
+        next();
+    },
+    passport.authenticate('discord', {
+        failureRedirect: '/',
+        failWithError: true
+    }),
     async (req, res) => {
+        console.log('Auth callback received. User authenticated:', req.user ? req.user.id : 'none');
         try {
             await storeAccessToken(req.user.id, req.user.accessToken, req.user.refreshToken);
-            
+
             const guildMember = await fetchGuildMember(req.user.id, req.user.accessToken);
             const connections = await fetchUserConnections(req.user.accessToken);
             const guildInfo = await fetchGuildInfo();
@@ -187,7 +209,7 @@ router.get('/logout', async (req, res) => {
     if (req.user && req.user.id) {
         await clearUserSession(req.user.id);
     }
-    
+
     req.logout((err) => {
         if (err) console.error(err);
         req.session.destroy((err) => {
