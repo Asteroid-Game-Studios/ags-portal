@@ -54,6 +54,11 @@ connectToDatabase().then(() => {
             autoReconnect: true,
             mongoOptions: {
                 useUnifiedTopology: true
+            },
+            autoRemoveInterval: 10,
+            handleDecryptionError: (err, data) => {
+                console.log('Session decryption error, creating new session:', err.message);
+                return null;
             }
         })
     }));
