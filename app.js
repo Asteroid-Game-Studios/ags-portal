@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const MongoStore = require('connect-mongo');
 const { connectToDatabase } = require('./lib/mongo');
+
+const { retrieveAccessToken, fetchUserProfile } = require('./lib/auth');
 require('dotenv').config();
 
 const app = express();
