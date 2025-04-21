@@ -41,8 +41,32 @@ router.get('/discord', (req, res) => {
     const authUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds%20connections`;
 
     console.log('Redirecting to Discord OAuth URL:', authUrl);
-});
 
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Redirecting to Discord...</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                .btn { display: inline-block; background: #5865F2; color: white; padding: 12px 24px; 
+                       text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 20px; }
+            </style>
+        </head>
+        <body>
+            <h1>Redirecting to Discord</h1>
+            <p>Click the button below if you're not automatically redirected:</p>
+            <a href="${authUrl}" class="btn">Continue to Discord</a>
+            <script>
+
+                setTimeout(function() {
+                    window.location.href = "${authUrl}";
+                }, 5000);
+            </script>
+        </body>
+        </html>
+    `);
+});
 
 
 router.get('/callback/discord',
