@@ -252,26 +252,21 @@ router.get('/retry-2fa', (req, res) => {
     res.redirect('/api/auth/discord');
 });
 
-router.get('/logout', async (req, res) => {
-    try {
-
-        if (req.user && req.user.id) {
-            await clearUserSession(req.user.id);
+router.get('/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error('Error during logout:', err);
+            return res.redirect('/?error=logout');
         }
 
-        req.logout((err) => {
-            if (err) console.error('Error during logout:', err);
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                return res.redirect('/?error=session');
+            }
 
-            req.session.destroy((err) => {
-                if (err) console.error('Error destroying session:', err);
-                res.clearCookie('ags_portal_session');
-                res.redirect('/');
-            });
+            res.clearCookie('connect.sid');
+            return res.redirect('/');
         });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.redirect('/');
-    }
+    });
 });
-
-module.exports = router;
