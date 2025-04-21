@@ -101,6 +101,7 @@ connectToDatabase().then(() => {
     const tasksRoute = require('./routes/tasks');
 
 
+    // Update these lines in your app.js file
     app.use('/', indexRoute);
     app.use('/dashboard', dashboardRoute);
     app.use('/auth', authRoute);
@@ -108,11 +109,10 @@ connectToDatabase().then(() => {
     app.use('/api', apiRoute);
     app.use('/api/users', apiUsersRoute);
     app.use('/docs', docsRoute);
-    app.use('/docs/overview', docsRoute);
-    app.use('/docs/rblx-studio', docsRoute);
-    app.use('/docs/moderation', docsRoute);
+
+
     app.use('/meetings', meetingsRoute);
-    app.use('/tasks', tasksRoute)
+    app.use('/tasks', tasksRoute);
 
     app.get('/2fa', (req, res) => {
         if (!req.user) {
