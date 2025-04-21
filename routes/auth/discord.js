@@ -18,6 +18,10 @@ const {
     remove2FA,
     send2FACode
 } = require('../../lib/2fa');
+const {
+    storeAccessToken,
+    clearUserSession
+} = require('../../lib/auth');
 
 
 router.get('/discord', (req, res) => {
@@ -28,6 +32,8 @@ router.get('/callback/discord',
     passport.authenticate('discord', { failureRedirect: '/' }),
     async (req, res) => {
         try {
+            await storeAccessToken(req.user.id, req.user.accessToken, req.user.refreshToken);
+            
             const guildMember = await fetchGuildMember(req.user.id, req.user.accessToken);
             const connections = await fetchUserConnections(req.user.accessToken);
             const guildInfo = await fetchGuildInfo();
@@ -177,10 +183,18 @@ router.get('/retry-2fa', (req, res) => {
     res.redirect('/api/auth/discord');
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', async (req, res) => {
+    if (req.user && req.user.id) {
+        await clearUserSession(req.user.id);
+    }
+    
     req.logout((err) => {
         if (err) console.error(err);
-        res.redirect('/');
+        req.session.destroy((err) => {
+            if (err) console.error('Error destroying session:', err);
+            res.clearCookie('ags_portal_session');
+            res.redirect('/');
+        });
     });
 });
 

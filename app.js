@@ -25,7 +25,12 @@ app.use(session({
     secret: process.env.NEXTAUTH_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: {
+        secure: process.env.NODE_ENV === 'production' || 'production',
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true
+    },
+    name: 'ags_portal_session'
 }));
 
 
@@ -43,11 +48,26 @@ passport.use(new DiscordStrategy({
 }));
 
 passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
 });
 
-passport.deserializeUser((user, done) => {
-    done(null, user);
+passport.deserializeUser(async (id, done) => {
+    try {
+        const accessToken = await retrieveAccessToken(id);
+        if (!accessToken) {
+            return done(null, false);
+        }
+
+        const profile = await fetchUserProfile(id, accessToken);
+        if (!profile) {
+            return done(null, false);
+        }
+
+        done(null, profile);
+    } catch (error) {
+        console.error('Error deserializing user:', error);
+        done(error, null);
+    }
 });
 
 
@@ -110,11 +130,9 @@ app.use('/dashboard', dashboardRoute);
 app.use('/api/auth', authRoute);
 
 
-// Add this near your other route definitions
 app.use('/tasks', require('./routes/tasks'));
 app.use('/meetings', require('./routes/meetings'));
 
-// Make sure you have a catch-all route at the end
 app.use((req, res) => {
     console.log(`404 - Not Found: ${req.originalUrl}`);
     res.status(404).send('Not Found');
