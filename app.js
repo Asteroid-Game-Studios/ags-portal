@@ -5,7 +5,8 @@ const expressLayouts = require('express-ejs-layouts');
 const DiscordStrategy = require('passport-discord').Strategy;
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const connectMongo = require('./lib/mongo');
+const MongoStore = require('connect-mongo');
+
 const { retrieveAccessToken, fetchUserProfile } = require('./lib/auth');
 require('dotenv').config();
 
@@ -168,5 +169,3 @@ app.listen(process.env.PORT || 3001, () => {
     });
     console.log('=======================\n');
 });
-
-connectMongo();
