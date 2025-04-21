@@ -33,7 +33,9 @@ connectToDatabase().then(() => {
         resave: false,
         saveUninitialized: false,
         genid: function (req) {
-            return require('crypto').randomUUID();
+            const sessionId = require('crypto').randomUUID();
+            console.log(`Generating new session ID: ${sessionId}`);
+            return sessionId;
         },
         cookie: {
             secure: process.env.NODE_ENV === 'production',
@@ -44,7 +46,15 @@ connectToDatabase().then(() => {
             mongoUrl: process.env.MONGODB_URI,
             ttl: 24 * 60 * 60,
             autoRemove: 'native',
-            stringify: false
+            stringify: false,
+            crypto: {
+                secret: process.env.NEXTAUTH_SECRET
+            },
+            touchAfter: 24 * 3600,
+            autoReconnect: true,
+            mongoOptions: {
+                useUnifiedTopology: true
+            }
         })
     }));
 
