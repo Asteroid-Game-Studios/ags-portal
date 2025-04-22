@@ -67,6 +67,10 @@ router.delete('/:id', isAuthenticated, hasStaffRole, async (req, res) => {
             return res.status(404).json({ error: 'Meeting not found or unauthorized' });
         }
 
+        // Notify Discord bot about the cancellation
+        const { sendMeetingNotification } = require('../lib/discordBot');
+        sendMeetingNotification(meeting, true); // Pass true to indicate cancellation
+
         res.status(200).json({ message: 'Meeting deleted successfully' });
     } catch (error) {
         console.error('Error deleting meeting:', error);
