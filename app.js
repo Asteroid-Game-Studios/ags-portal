@@ -178,9 +178,7 @@ connectToDatabase().then(() => {
             user: req.user
         });
     });
-
-
-connectMongo();
+    
 initializeBot();
 
 
