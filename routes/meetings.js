@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { isAuthenticated, hasStaffRole } = require('../lib/session');
+const { isAuthenticated, hasDirectorRole, hasStaffRole } = require('../lib/session'); // Add hasStaffRole
 const Meeting = require('../models/Meeting');
 
 // Page route
-router.get('/', isAuthenticated, hasStaffRole, async (req, res) => {
+router.get('/', isAuthenticated, hasDirectorRole, async (req, res) => {
     try {
         const meetings = await Meeting.find({
             date: { $gte: new Date() }
