@@ -7,7 +7,8 @@ const meetingSchema = new mongoose.Schema({
     description: String,
     createdBy: { type: String, required: true },
     participants: [String],
-    invitedRoles: [String] // Add this field
+    invitedRoles: [String],
+    meetingRoom: { type: String, required: true } // <-- Add this line
 });
 
 module.exports = mongoose.model('Meeting', meetingSchema);

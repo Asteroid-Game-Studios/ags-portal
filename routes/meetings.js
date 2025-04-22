@@ -31,20 +31,27 @@ router.get('/', isAuthenticated, hasStaffRole, async (req, res) => {
 // API route
 router.post('/', isAuthenticated, hasStaffRole, async (req, res) => {
     try {
+        const { title, date, duration, description, invitedRoles, meetingRoom } = req.body;
         const meeting = new Meeting({
-            title: req.body.title,
-            date: new Date(req.body.date),
-            duration: req.body.duration,
-            description: req.body.description,
-            createdBy: req.user.id,
-            invitedRoles: req.body.invitedRoles
+            title,
+            date,
+            duration,
+            description,
+            invitedRoles,
+            meetingRoom, // <-- Save meetingRoom
+            createdBy: req.user.id, // or however you track the creator
+            participants: []
         });
-
         await meeting.save();
-        res.status(201).send();
+
+        // Notify Discord bot
+        const { sendMeetingNotification } = require('../lib/discordBot');
+        sendMeetingNotification(meeting);
+
+        res.status(201).json({ success: true, meeting });
     } catch (error) {
-        console.error('Error creating meeting:', error);
-        res.status(500).send('Error creating meeting');
+        console.error(error);
+        res.status(500).json({ error: 'Failed to create meeting' });
     }
 });
 

@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: document.getElementById('meetingDate').value,
                 duration: document.getElementById('meetingDuration').value,
                 description: document.getElementById('meetingDescription').value,
-                invitedRoles: invitedRoles
+                invitedRoles: invitedRoles,
+                meetingRoom: document.getElementById('meetingRoom').value // <-- Add this line
             };
 
             try {

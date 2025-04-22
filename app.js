@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectMongo = require('./lib/mongo');
 const { retrieveAccessToken, fetchUserProfile } = require('./lib/auth');
+const { initializeBot } = require('./lib/discordBot');
 require('dotenv').config();
 
 const app = express();
@@ -157,3 +158,4 @@ app.listen(process.env.PORT || 3001, () => {
 });
 
 connectMongo();
+initializeBot();

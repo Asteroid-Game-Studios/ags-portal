@@ -29,7 +29,16 @@
                     <label for="meetingDescription">Description</label>
                     <textarea id="meetingDescription" rows="3"></textarea>
                 </div>
-                <!-- Inside the meeting form -->
+                <!-- Meeting Room selection -->
+                <div class="form-group">
+                    <label for="meetingRoom">Meeting Room</label>
+                    <select id="meetingRoom" name="meetingRoom" required>
+                        <option value="" disabled selected>Select a room</option>
+                        <option value="1">Room 1</option>
+                        <option value="2">Room 2</option>
+                        <option value="3">Room 3</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Invite Roles</label>
                     <div class="role-checkboxes">
