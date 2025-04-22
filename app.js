@@ -9,6 +9,7 @@ const MongoStore = require('connect-mongo');
 const { connectToDatabase } = require('./lib/mongo');
 
 const { retrieveAccessToken, fetchUserProfile } = require('./lib/auth');
+const { initializeBot } = require('./lib/discordBot');
 require('dotenv').config();
 
 const app = express();
@@ -178,6 +179,9 @@ connectToDatabase().then(() => {
         });
     });
 
+
+connectMongo();
+initializeBot();
 
 
     app.use((req, res) => {
