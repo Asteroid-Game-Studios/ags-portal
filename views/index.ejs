@@ -17,6 +17,7 @@
                 </div>
                 <% } %>
 
+                <% if (!user) { %>
                     <a href="/api/auth/discord" class="banner-login-btn">
                         <svg class="discord-icon" aria-hidden="true" viewBox="0 0 127.14 96.36">
                             <path
@@ -25,6 +26,12 @@
                         </svg>
                         Login with Discord
                     </a>
+                <% } else { %>
+                    <a href="/dashboard" class="banner-login-btn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Go to Dashboard
+                    </a>
+                <% } %>
         </div>
     </div>
 
